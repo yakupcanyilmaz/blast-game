@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-  [SerializeField] private LevelNoSO currentLevelNumber;
+  [SerializeField] private IntSO currentLevelNumber;
+  public IntSO CurrentLevelNumber { get { return currentLevelNumber; } }
 
   private int ballsToSpawn = 0;
   public int BallsToSpawn { get { return ballsToSpawn; } }
@@ -58,4 +59,8 @@ public class GameManager : Singleton<GameManager>
     MenuManager.Instance.HandleBackPressed();
   }
 
+  public void OnLevelCompleted()
+  {
+    currentLevelNumber.Value++;
+  }
 }

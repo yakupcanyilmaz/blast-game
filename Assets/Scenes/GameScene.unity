@@ -158,8 +158,18 @@ MonoBehaviour:
     ballsRowNumber: 5
     ballSize: 0.5
     eggNumber: 1
-    iceNumber: 3
-    chainNumber: 0
+    iceNumber: 5
+    chains: []
+  - borderPrefab: {fileID: 8785052363185264626, guid: 4de735ddb52e2824ea6be02db869fc5f, type: 3}
+    ballsColumnNumber: 8
+    ballsRowNumber: 5
+    ballSize: 0.5
+    eggNumber: 2
+    iceNumber: 5
+    chains:
+    - type: 0
+      position: {x: 0, y: 0, z: 0}
+      numberToUnlock: 5
   ballPrefabs:
   - {fileID: 1758284199167962483, guid: 2d8dc0e7894a9044db42b84a7421f01e, type: 3}
   - {fileID: 6781821079378699395, guid: 70b6712ca4da07344b695088e0214ef2, type: 3}
@@ -170,6 +180,7 @@ MonoBehaviour:
   bombPrefab: {fileID: 2966797549693053932, guid: 3b179710d26b80540b46968cbd6c12aa, type: 3}
   eggPrefab: {fileID: 8191469054883383109, guid: 9aa2c705a0e610b4c9e9782d53a80ead, type: 3}
   chainPrefab: {fileID: 3672608801758249249, guid: 90f48e3526b17d04fa7a569a96943b58, type: 3}
+  currentLevelChains: []
 --- !u!4 &130907992
 Transform:
   m_ObjectHideFlags: 0
@@ -595,7 +606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9237847ef81f544baf581206f9f0ba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevelNumber: {fileID: 11400000, guid: dd61d9babb829c940ac47abd866c41c7, type: 2}
+  currentLevelNumber: {fileID: 11400000, guid: 1aafc8a625656744d948c53c7ec89df8, type: 2}
 --- !u!4 &685909750
 Transform:
   m_ObjectHideFlags: 0

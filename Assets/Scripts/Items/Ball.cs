@@ -15,12 +15,12 @@ public class Ball : MonoBehaviour
     public Animator Animator { get { return animator; } set { animator = value; } }
 
     private int destroyedBallNumberInOneClick;
+    [SerializeField] private List<Ball> destroyedBallsInOneClick;
     private bool mousePressed;
 
-    [SerializeField] private List<Ball> connectedSameTypeBalls;
-    [SerializeField] private bool isChecked;
+    private List<Ball> connectedSameTypeBalls;
+    private bool isChecked;
     public bool IsChecked { get { return isChecked; } set { isChecked = value; } }
-
 
     private void Update()
     {
@@ -38,6 +38,7 @@ public class Ball : MonoBehaviour
     private void HandleMousePressed()
     {
         mousePressed = false;
+        destroyedBallsInOneClick = new List<Ball>();
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
         if (hit.collider != null)
         {
@@ -46,16 +47,19 @@ public class Ball : MonoBehaviour
             && hitBall.Type != BallType.ice
             && hitBall.Type != BallType.bomb)
             {
+                connectedSameTypeBalls = new List<Ball>();
                 SetConnectedSameTypeBalls(hitBall);
                 destroyedBallNumberInOneClick = 0;
                 if (connectedSameTypeBalls.Count > 1)
                 {
+                    LevelManager.Instance.OnSameTypeBallsDestroyed(hitBall.Type, connectedSameTypeBalls.Count);
                     AudioManager.Instance.PlaySound("Match");
                     foreach (Ball sameTypeBall in connectedSameTypeBalls)
                     {
                         destroyedBallNumberInOneClick++;
                         sameTypeBall.Animator.SetTrigger("Destroy");
                     }
+                    Debug.Log(destroyedBallNumberInOneClick);
                 }
             }
             if (hitBall.Type == BallType.bomb)
@@ -71,6 +75,7 @@ public class Ball : MonoBehaviour
                     {
                         Ball bombHitBall = bombHit.collider.GetComponent<Ball>();
                         if (bombHitBall) bombHitBall.Animator.SetTrigger("Destroy");
+                        destroyedBallsInOneClick.Add(bombHitBall);
                     }
                 }
                 if (leftBombHits != null)
@@ -79,8 +84,10 @@ public class Ball : MonoBehaviour
                     {
                         Ball bombHitBall = bombHit.collider.GetComponent<Ball>();
                         if (bombHitBall) bombHitBall.Animator.SetTrigger("Destroy");
+                        destroyedBallsInOneClick.Add(bombHitBall);
                     }
                 }
+                LevelManager.Instance.OnBallsDestroyed(destroyedBallsInOneClick);
             }
         }
     }
@@ -98,43 +105,18 @@ public class Ball : MonoBehaviour
                     if (colliderBall.Type == hitBall.Type && colliderBall.isChecked == false
                     && (colliderBall.Type != BallType.bomb || colliderBall.Type != BallType.ice))
                     {
-                        colliderBall.IsChecked = true;
-                        connectedSameTypeBalls.Add(colliderBall);
-                        SetConnectedSameTypeBalls(colliderBall);
+                        if(colliderBall != hitBall)
+                        {
+                            colliderBall.isChecked = true;
+                            connectedSameTypeBalls.Add(colliderBall);
+                            SetConnectedSameTypeBalls(colliderBall);
+                        }
                     }
-                    if (colliderBall.Type == BallType.ice) colliderBall.Animator.SetTrigger("Destroy");
+                    if (colliderBall.Type == BallType.ice && hitBall.isChecked == true) colliderBall.Animator.SetTrigger("Destroy");
                 }
             }
         }
     }
-
-    // private void DestroySameTypes(Ball hitBall)
-    // {
-    //     Collider2D[] colliders = Physics2D.OverlapCircleAll(hitBall.transform.position, 0.3f);
-    //     if (colliders.Length != 0)
-    //     {
-    //         foreach (Collider2D collider in colliders)
-    //         {
-    //             Ball colliderBall = collider.GetComponent<Ball>();
-    //             if (colliderBall != null&&
-    //                 colliderBall.Type == hitBall.Type)
-    //             {
-    //                 if (colliderBall.Type == BallType.ice)
-    //                 {
-    //                     Destroy(collider.gameObject);
-    //                 }
-    //                 if (colliderBall == hitBall)
-    //                 {
-    //                     Destroy(hitBall.gameObject);
-    //                 }
-    //                 if (colliderBall != hitBall )
-    //                 {
-    //                     DestroySameTypes(colliderBall);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
     void DestroyEvent()
     {

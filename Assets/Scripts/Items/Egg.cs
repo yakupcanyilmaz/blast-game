@@ -9,8 +9,7 @@ public class Egg : MonoBehaviour
         if (collision.gameObject.tag == "Border")
         {
             Destroy(gameObject);
-            LevelEndMenu.Show();
-            LevelEndMenu.Instance.OpenWinMenu();
+            LevelManager.Instance.OnEggCracked();
         }
     }
 }

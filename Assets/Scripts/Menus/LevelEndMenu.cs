@@ -3,9 +3,10 @@ using UnityEngine.UI;
 
 public class LevelEndMenu : SimpleMenu<LevelEndMenu>
 {
-
   public void OnMainPressed()
   {
+    Hide();
+    GameMenu.Hide();
     MenuManager.Instance.LoadMainMenu();
   }
 
