@@ -154,13 +154,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levels:
   - borderPrefab: {fileID: 8785052363185264626, guid: 4de735ddb52e2824ea6be02db869fc5f, type: 3}
-    ballsColumnNumber: 8
+    ballsColumnNumber: 6
     ballsRowNumber: 5
     ballSize: 0.5
     eggNumber: 1
-    iceNumber: 5
+    iceNumber: 2
     chains: []
-  - borderPrefab: {fileID: 8785052363185264626, guid: 4de735ddb52e2824ea6be02db869fc5f, type: 3}
+  - borderPrefab: {fileID: 3527645256270870858, guid: da3edc1156f793c4f89210be00f222c1, type: 3}
     ballsColumnNumber: 8
     ballsRowNumber: 5
     ballSize: 0.5
@@ -168,7 +168,7 @@ MonoBehaviour:
     iceNumber: 5
     chains:
     - type: 0
-      position: {x: 0, y: 0, z: 0}
+      position: {x: 0, y: 1.3, z: 0}
       numberToUnlock: 5
   ballPrefabs:
   - {fileID: 1758284199167962483, guid: 2d8dc0e7894a9044db42b84a7421f01e, type: 3}

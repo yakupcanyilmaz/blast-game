@@ -42,8 +42,6 @@ public class LevelManager : Singleton<LevelManager>
             for (int j = 0; j < rowNumber; j++)
             {
                 SpawnRandomBall(new Vector2(i * ballSize - (ballSize * 0.5f * (columnNumber - 1)), (j * ballSize - (ballSize * 0.5f * (rowNumber - 1)) + 5f)));
-                // int randomIndex = Random.Range(0, ballPrefabs.Length);
-                // Instantiate(ballPrefabs[randomIndex], new Vector2(i * ballSize - (ballSize * 0.5f * (columnNumber - 1)), (j * ballSize - (ballSize * 0.5f * (rowNumber - 1)) + 5f)), Quaternion.identity);
             }
         }
         for (int i = 0; i < iceNumber; i++)
@@ -82,6 +80,11 @@ public class LevelManager : Singleton<LevelManager>
                 {
                     currentLevelChains[0].NumberToUnlock -= numberOfBallsDestroyed;
                     currentLevelChains[0].NumberText.text = currentLevelChains[0].NumberToUnlock.ToString();
+                    if (currentLevelChains[0].NumberToUnlock == 0)
+                    {
+                        Destroy(currentLevelChains[0].gameObject);
+                        currentLevelChains.RemoveAt(0);
+                    }
                 }
                 else
                 {
@@ -94,9 +97,13 @@ public class LevelManager : Singleton<LevelManager>
 
     public void OnBallsDestroyed(List<Ball> destroyedBalls)
     {
-        for (int i = 0; i < destroyedBalls.Count; i++)
+        Debug.Log("BallsDestroyed: " + destroyedBalls.Count);
+        for (int i = 0; i < destroyedBalls.Count * 0.25f; i++)
         {
-            SpawnRandomBall(new Vector2(i * ballSize - (ballSize * 0.5f * (destroyedBalls.Count - 1)), 5f));
+            for (int j = 0; j < 4; j++)
+            {
+                SpawnRandomBall(new Vector2(i * ballSize - (ballSize * 0.5f * (destroyedBalls.Count * 0.25f - 1)), (j * ballSize - (ballSize * 0.5f * (2 - 1)) + 5f)));
+            }
         }
         if (currentLevelChains.Count > 0)
         {
@@ -108,6 +115,7 @@ public class LevelManager : Singleton<LevelManager>
                     {
                         currentLevelChains[0].NumberToUnlock--;
                         currentLevelChains[0].NumberText.text = currentLevelChains[0].NumberToUnlock.ToString();
+                        continue;
                     }
                     if (currentLevelChains[0].NumberToUnlock <= 0)
                     {

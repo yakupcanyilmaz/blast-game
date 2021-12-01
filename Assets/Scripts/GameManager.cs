@@ -6,13 +6,7 @@ public class GameManager : Singleton<GameManager>
   [SerializeField] private IntSO currentLevelNumber;
   public IntSO CurrentLevelNumber { get { return currentLevelNumber; } }
 
-  private int ballsToSpawn = 0;
-  public int BallsToSpawn { get { return ballsToSpawn; } }
-  private int ballsRemaining;
-
   private bool isPaused;
-  private bool isBallSpawned;
-  private bool isParticlesSpawned;
 
   private void OnEnable()
   {

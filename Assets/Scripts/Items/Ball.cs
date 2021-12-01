@@ -38,16 +38,16 @@ public class Ball : MonoBehaviour
     private void HandleMousePressed()
     {
         mousePressed = false;
-        destroyedBallsInOneClick = new List<Ball>();
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
         if (hit.collider != null)
         {
+            destroyedBallsInOneClick = new List<Ball>();
+            connectedSameTypeBalls = new List<Ball>();
             Ball hitBall = hit.collider.GetComponent<Ball>();
             if (hitBall != null
             && hitBall.Type != BallType.ice
             && hitBall.Type != BallType.bomb)
             {
-                connectedSameTypeBalls = new List<Ball>();
                 SetConnectedSameTypeBalls(hitBall);
                 destroyedBallNumberInOneClick = 0;
                 if (connectedSameTypeBalls.Count > 1)
@@ -66,28 +66,26 @@ public class Ball : MonoBehaviour
             {
                 AudioManager.Instance.PlaySound("Bomb");
                 hitBall.Animator.SetTrigger("Destroy");
-                RaycastHit2D[] rightBombHits = Physics2D.CircleCastAll(hitBall.transform.position, 0.25f, Vector2.right, LayerMask.GetMask("Ball"));
-                RaycastHit2D[] leftBombHits = Physics2D.CircleCastAll(hitBall.transform.position, 0.25f, Vector2.left, LayerMask.GetMask("Ball"));
+                Vector2 castStartPosition = new Vector2((hitBall.transform.position - Vector3.right * 10f).x, hitBall.transform.position.y);
+                Debug.Log(castStartPosition);
+                                                                                    
+                RaycastHit2D[] bombHits = Physics2D.CircleCastAll(castStartPosition, 0.25f, Vector2.right, 20f, LayerMask.GetMask("Ball"));
+                Debug.DrawLine(castStartPosition, castStartPosition + Vector2.right * 20f, Color.white, 10.0f, false);
 
-                if (rightBombHits != null)
+                if (bombHits != null)
                 {
-                    foreach (RaycastHit2D bombHit in rightBombHits)
+                    for (int i = 0; i < bombHits.Length; i++)
                     {
-                        Ball bombHitBall = bombHit.collider.GetComponent<Ball>();
-                        if (bombHitBall) bombHitBall.Animator.SetTrigger("Destroy");
-                        destroyedBallsInOneClick.Add(bombHitBall);
+                        Ball bombHitBall = bombHits[i].collider.GetComponent<Ball>();
+                        if (bombHitBall)
+                        {
+                            bombHitBall.Animator.SetTrigger("Destroy");
+                            destroyedBallsInOneClick.Add(bombHitBall);
+                        }
+                        if (i == bombHits.Length - 1) LevelManager.Instance.OnBallsDestroyed(destroyedBallsInOneClick);
                     }
                 }
-                if (leftBombHits != null)
-                {
-                    foreach (RaycastHit2D bombHit in leftBombHits)
-                    {
-                        Ball bombHitBall = bombHit.collider.GetComponent<Ball>();
-                        if (bombHitBall) bombHitBall.Animator.SetTrigger("Destroy");
-                        destroyedBallsInOneClick.Add(bombHitBall);
-                    }
-                }
-                LevelManager.Instance.OnBallsDestroyed(destroyedBallsInOneClick);
+                Debug.Log("BallsDestroyed: " + destroyedBallsInOneClick.Count);
             }
         }
     }
